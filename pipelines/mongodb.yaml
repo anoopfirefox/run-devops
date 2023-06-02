@@ -8,8 +8,7 @@ trigger:
       - main
     paths:
       include:
-      - Shopping/Shopping.API/*
-      - aks/shoppingapi.yaml
+      - aks/mongo.yaml
 
 resources:
 - repo: self
@@ -18,9 +17,8 @@ variables:
 
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '8da570d5-4ddb-47fb-a343-0eb05c5ce375'
-  imageRepository: 'shopping_api/shoppingapi'
+  imageRepository: 'mongo_db/mongo'
   containerRegistry: 'proddevops.azurecr.io'
-  dockerfilePath: 'Shopping/Shopping.API/Dockerfile'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'proddevops164718bb-auth'
 
@@ -29,28 +27,6 @@ variables:
   
 
 stages:
-- stage: Build
-  displayName: Build stage
-  jobs:  
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: $(vmImageName)
-    steps:
-    - task: Docker@2
-      displayName: Build and push an image to container registry
-      inputs:
-        command: buildAndPush
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
-        containerRegistry: $(dockerRegistryServiceConnection)
-        buildContext: $(Build.SourcesDirectory)/Shopping
-        tags: |
-          $(tag)
-          
-    - upload: aks
-      artifact: aks
-
 - stage: Deploy
   displayName: Deploy stage
   dependsOn: Build
@@ -77,7 +53,7 @@ stages:
             inputs:
               action: deploy
               manifests: |
-                $(Pipeline.Workspace)/aks/shoppingapi.yaml
+                $(Pipeline.Workspace)/aks/mongo.yaml
               imagePullSecrets: |
                 $(imagePullSecret)
               containers: |
