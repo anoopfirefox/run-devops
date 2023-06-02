@@ -16,7 +16,7 @@ resources:
 variables:
 
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: '8da570d5-4ddb-47fb-a343-0eb05c5ce375'
+  dockerRegistryServiceConnection: 'fe9cd89b-ed35-4309-a8ab-a4fbd145da16'
   imageRepository: 'mongo_db/mongo'
   containerRegistry: 'proddevops.azurecr.io'
   tag: '$(Build.BuildId)'
