@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: mongodbmongo
+spec:
+    type: LoadBalancer
+    ports:
+    - port: 27017 
+    selector:
+        app: mongodbmongo
