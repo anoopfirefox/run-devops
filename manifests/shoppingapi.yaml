@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: shopping-app
+  namespace: prod-shoppingapp
   name: shoppingapi-deployment
   labels:
     app: shoppingapi
@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - name: shoppingapi
-          image: anoophegde1995/shoppingapi:v1
+          image: proddevops.azurecr.io/shopping_api/shoppingapi:v1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
@@ -30,7 +30,6 @@ spec:
             - name: ASPNETCORE_ENVIRONMENT
               value: Development
             - name: DatabaseSettings__ConnectionString
-              #value: 'mongodb://admin:admin@#1234$@mongo-service:27017'
               valueFrom:
                   configMapKeyRef:
                     name: mongo-configmap
@@ -42,11 +41,15 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "500m"
+     
+      imagePullSecrets:
+        - name: acr-secret          
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: shopping-app      
+  namespace: prod-shoppingapp      
   name: shoppingapi-service
 spec:
   type: NodePort
